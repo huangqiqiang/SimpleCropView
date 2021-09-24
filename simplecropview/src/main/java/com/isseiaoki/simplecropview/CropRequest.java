@@ -3,7 +3,6 @@ package com.isseiaoki.simplecropview;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import com.isseiaoki.simplecropview.callback.CropCallback;
-import io.reactivex.Single;
 
 public class CropRequest {
 
@@ -42,18 +41,17 @@ public class CropRequest {
   }
 
   private void build() {
-    if (outputWidth > 0) cropImageView.setOutputWidth(outputWidth);
-    if (outputHeight > 0) cropImageView.setOutputHeight(outputHeight);
+    if (outputWidth > 0) {
+      cropImageView.setOutputWidth(outputWidth);
+    }
+    if (outputHeight > 0) {
+      cropImageView.setOutputHeight(outputHeight);
+    }
     cropImageView.setOutputMaxSize(outputMaxWidth, outputMaxHeight);
   }
 
   public void execute(CropCallback cropCallback) {
     build();
     cropImageView.cropAsync(sourceUri, cropCallback);
-  }
-
-  public Single<Bitmap> executeAsSingle() {
-    build();
-    return cropImageView.cropAsSingle(sourceUri);
   }
 }

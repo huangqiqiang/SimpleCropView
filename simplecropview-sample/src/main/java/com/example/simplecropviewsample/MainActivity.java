@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       case R.id.basic_sample_button:
         startActivity(BasicActivity.createIntent(this));
         break;
-      case R.id.rx_sample_button:
-        startActivity(RxActivity.createIntent(this));
-        break;
     }
   }
 
