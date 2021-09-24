@@ -786,6 +786,7 @@ public class CropImageView extends ImageView {
     }
 
 
+
     private boolean isInLeft(float x, float y) {
         if (mCropMode == CropMode.FREE && x > mFrameRect.left - 10 && x < mFrameRect.left + 10) {
             return true;
