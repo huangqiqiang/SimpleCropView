@@ -138,7 +138,10 @@ public class CropImageView extends ImageView {
     private boolean mIsAnimationEnabled = true;
     private int mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
     private boolean mIsHandleShadowEnabled = true;
-
+    /**
+     * 自由移动下边框触发大小
+     */
+    private int mShadowsEnabledSize = 20;
     // Constructor /////////////////////////////////////////////////////////////////////////////////
 
     public CropImageView(Context context) {
@@ -699,8 +702,17 @@ public class CropImageView extends ImageView {
             case RIGHT_BOTTOM:
                 moveHandleRB(diffX, diffY);
                 break;
-            case  LEFT:
+            case LEFT:
                 moveHandleLT(diffX, 0);
+                break;
+            case RIGHT:
+                moveHandleRB(diffX, 0);
+                break;
+            case TOP:
+                moveHandleLT(0, diffY);
+                break;
+            case BOTTOM:
+                moveHandleRB(0, diffY);
                 break;
             case OUT_OF_BOUNDS:
                 break;
@@ -775,6 +787,36 @@ public class CropImageView extends ImageView {
             }
             return;
         }
+        if (isInRight(x, y)) {
+            mTouchArea = TouchArea.RIGHT;
+            if (mHandleShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowHandle = true;
+            }
+            if (mGuideShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowGuide = true;
+            }
+            return;
+        }
+        if (isInTop(x, y)) {
+            mTouchArea = TouchArea.TOP;
+            if (mHandleShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowHandle = true;
+            }
+            if (mGuideShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowGuide = true;
+            }
+            return;
+        }
+        if (isInBottom(x, y)) {
+            mTouchArea = TouchArea.BOTTOM;
+            if (mHandleShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowHandle = true;
+            }
+            if (mGuideShowMode == ShowMode.SHOW_ON_TOUCH) {
+                mShowGuide = true;
+            }
+            return;
+        }
         if (isInsideFrame(x, y)) {
             if (mGuideShowMode == ShowMode.SHOW_ON_TOUCH) {
                 mShowGuide = true;
@@ -786,9 +828,29 @@ public class CropImageView extends ImageView {
     }
 
 
+    private boolean isInTop(float x, float y) {
+        if (mCropMode == CropMode.FREE && y > mFrameRect.top - mShadowsEnabledSize && y < mFrameRect.top + mShadowsEnabledSize) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInBottom(float x, float y) {
+        if (mCropMode == CropMode.FREE && y > mFrameRect.bottom - mShadowsEnabledSize && y < mFrameRect.bottom + mShadowsEnabledSize) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInRight(float x, float y) {
+        if (mCropMode == CropMode.FREE && x > mFrameRect.right - mShadowsEnabledSize && x < mFrameRect.right + mShadowsEnabledSize) {
+            return true;
+        }
+        return false;
+    }
 
     private boolean isInLeft(float x, float y) {
-        if (mCropMode == CropMode.FREE && x > mFrameRect.left - 10 && x < mFrameRect.left + 10) {
+        if (mCropMode == CropMode.FREE && x > mFrameRect.left - mShadowsEnabledSize && x < mFrameRect.left + mShadowsEnabledSize) {
             return true;
         }
         return false;
@@ -2186,6 +2248,14 @@ public class CropImageView extends ImageView {
         mAnimationDurationMillis = durationMillis;
     }
 
+    public int getShadowsEnabledSize() {
+        return mShadowsEnabledSize;
+    }
+
+    public void setShadowsEnabledSize(int mShadowsEnabledSize) {
+        this.mShadowsEnabledSize = mShadowsEnabledSize;
+    }
+
     /**
      * Set interpolator of animation
      * (Default interpolator is DecelerateInterpolator)
@@ -2335,7 +2405,7 @@ public class CropImageView extends ImageView {
     // Enum ////////////////////////////////////////////////////////////////////////////////////////
 
     private enum TouchArea {
-        OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM, LEFT
+        OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM, LEFT, RIGHT, TOP, BOTTOM
     }
 
     public enum HandlesMode {
